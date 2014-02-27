@@ -27,8 +27,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	private static final String DATA_TABLE_CREATE = "create table dataTable ("
 			+ "id integer primary key," + "name text,"
-			+ "surname text," + "birthday text,"
-			+ "image Blob" + ");";
+			+ "surname text," + "birthday text," + "bio text," 
+			+ "skype text," + "image Blob" + ");";
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
