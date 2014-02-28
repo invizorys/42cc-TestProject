@@ -1,28 +1,19 @@
 package com.invizorys.cc.testproject.util;
 
-import java.io.ByteArrayOutputStream;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 
-import com.invizorys.cc.testproject.R;
-
 public class DBHelper extends SQLiteOpenHelper {
-	private ContentValues cv;
-	private SQLiteDatabase db;
-	private Context context;
+	private static ContentValues cv;
+	private static SQLiteDatabase db;
 	
-	final String LOG_TAG = "myLogs";
+	final static String LOG_TAG = "myLogs";
 
 	public DBHelper(Context context) {
 		super(context, "myDB", null, 1);
-		this.context = context;
 	}
 	
 	private static final String DATA_TABLE_CREATE = "create table dataTable ("
@@ -32,7 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		this.db = db;
+		setDb(db);
 		Log.d(LOG_TAG, "--- onCreate database ---");
 		db.execSQL(DATA_TABLE_CREATE);
 		Log.d(LOG_TAG, "--- Table created ---");
@@ -46,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	}
 	
-	private void insertData()
+	public static void insertData()
 	{
 		cv = new ContentValues();
 		Log.d(LOG_TAG, "--- Insert in dataTable: ---");
@@ -57,21 +48,17 @@ public class DBHelper extends SQLiteOpenHelper {
 		cv.put("birthday", "23.07.94");
 		cv.put("bio", "student");
 		cv.put("skype", "invizorys");
-		
-		Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-				R.drawable.photo);
 
-		byte[] image = getBitmapAsByteArray(icon);
-		cv.put("image", image);
-
-		long rowID = db.insert("dataTable", null, cv);
+		long rowID = getDb().insert("dataTable", null, cv);
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
-	
-	private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		bitmap.compress(CompressFormat.PNG, 0, outputStream);
-		return outputStream.toByteArray();
-	}	
+
+	public static SQLiteDatabase getDb() {
+		return db;
+	}
+
+	public static void setDb(SQLiteDatabase db) {
+		DBHelper.db = db;
+	}
 }
 
