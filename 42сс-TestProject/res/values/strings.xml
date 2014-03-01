@@ -4,5 +4,6 @@
     <string name="app_name">42сс-TestProject</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="app_id">591632274264513</string> 
 
 </resources>
