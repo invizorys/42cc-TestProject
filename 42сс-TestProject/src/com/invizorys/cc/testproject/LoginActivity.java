@@ -10,18 +10,30 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.invizorys.cc.testproject.R;
+import com.invizorys.cc.testproject.util.DBHelper;
 
 public class LoginActivity extends Activity {
-	public static final String TAG = "LoginActivity";
 	private UiLifecycleHelper uiHelper;
 	private GraphUser user;
+	private ContentValues cv;
+	private SQLiteDatabase db;
+	private DBHelper dbHelper;
+	private Context context = this;
+	
+	final static String LOG_TAG = "myLogs";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +41,8 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		uiHelper = new UiLifecycleHelper(this, callback);
 		uiHelper.onCreate(savedInstanceState);
+		
+		dbHelper = new DBHelper(this);
 
 		Session session = Session.getActiveSession();
 		if (session != null && session.isOpened()) {
@@ -39,7 +53,10 @@ public class LoginActivity extends Activity {
 				new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						login();
+						if(isNetworkConnected())
+							login();
+						else
+							Toast.makeText(context, "check your internet connection", Toast.LENGTH_SHORT).show();
 					}
 				});
 	}
@@ -74,10 +91,11 @@ public class LoginActivity extends Activity {
 	private void onSessionStateChange(Session session, SessionState state,
 			Exception exception) {
 		if (session != null && session.isOpened()) {
-			Log.i(TAG, "session is open");
-			getUser();
+			Log.i(LOG_TAG, "session is open");
+			if(isNetworkConnected())
+				getUser();
 		} else {
-			Log.i(TAG, "session is closed");
+			Log.i(LOG_TAG, "session is closed");
 		}
 	}
 
@@ -120,13 +138,35 @@ public class LoginActivity extends Activity {
 							Response response) {
 						if (currentUser != null) {
 							user = currentUser;
+							saveUserData();
 							startMainActivity();
 						} else {
-							Log.e(TAG, "GraphUser is null");
+							Log.e(LOG_TAG, "GraphUser is null");
 						}
 					}
 
 				});
 		Request.executeBatchAsync(request);
 	}
+
+	private void saveUserData() {
+		db = dbHelper.getWritableDatabase();
+
+		cv = new ContentValues();
+		cv.put("id", user.getId());
+		cv.put("name", user.getFirstName());
+		cv.put("surname", user.getLastName());
+		cv.put("birthday", user.getBirthday());
+		
+		long rowID = db.insert("dataTable", null, cv);
+		Log.d(LOG_TAG, "user: id - " + user.getId() + ", name - " + user.getFirstName() 
+				+ ", surname - " + user.getLastName() + ", birthday - " + user.getBirthday() + ", - saved on DB");
+		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
+	}
+	
+	private boolean isNetworkConnected() {
+		  ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		  NetworkInfo ni = cm.getActiveNetworkInfo();
+		  return ni != null && ni.isConnected();
+		 }
 }

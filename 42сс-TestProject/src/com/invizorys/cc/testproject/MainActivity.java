@@ -21,8 +21,8 @@ public class MainActivity extends SherlockFragmentActivity {
         ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		dataTab = actionBar.newTab().setText("Дані");
-		photoTab = actionBar.newTab().setText("Фото");
+		dataTab = actionBar.newTab().setText("FACEBOOK");
+		photoTab = actionBar.newTab().setText("ABOUT");
 
 		dataTab.setTabListener(new TabListener(dataFragment));
 		photoTab.setTabListener(new TabListener(photofragment));
