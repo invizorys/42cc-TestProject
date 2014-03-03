@@ -10,6 +10,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ public class LoginActivity extends Activity {
 	private SQLiteDatabase db;
 	private DBHelper dbHelper;
 	private Context context = this;
+	private ProgressDialog dialog;
 	
 	final static String LOG_TAG = "myLogs";
 
@@ -54,7 +56,10 @@ public class LoginActivity extends Activity {
 					@Override
 					public void onClick(View v) {
 						if(isNetworkConnected())
+						{
+							dialog = ProgressDialog.show(context, "", "Loading. Please wait...", true);
 							login();
+						}
 						else
 							Toast.makeText(context, "check your internet connection", Toast.LENGTH_SHORT).show();
 					}
@@ -139,6 +144,7 @@ public class LoginActivity extends Activity {
 						if (currentUser != null) {
 							user = currentUser;
 							saveUserData();
+							dialog.dismiss();
 							startMainActivity();
 						} else {
 							Log.e(LOG_TAG, "GraphUser is null");

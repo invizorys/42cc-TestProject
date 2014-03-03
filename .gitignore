@@ -24,3 +24,5 @@ project.properties
 # Eclipse project files
 .classpath
 .project
+
+actionbarsherlock/
