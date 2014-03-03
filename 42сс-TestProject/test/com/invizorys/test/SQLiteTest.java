@@ -52,7 +52,7 @@ public class SQLiteTest {
 	@Test
 	public void checkDbData()
 	{
-		DBHelper.insertData();
+		//DBHelper.insertData();
 		
 		Cursor c = _db.query("dataTable", null, null, null, null, null, null);
 		if (c.moveToFirst()) {
