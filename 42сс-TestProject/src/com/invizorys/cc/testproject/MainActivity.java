@@ -5,6 +5,9 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.facebook.Session;
 import com.invizorys.cc.testproject.R;
 
 public class MainActivity extends SherlockFragmentActivity {
@@ -30,5 +33,32 @@ public class MainActivity extends SherlockFragmentActivity {
 		actionBar.addTab(dataTab);
 		actionBar.addTab(photoTab);
     }
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.main, menu);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+    
+    @Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (item.getItemId()) {
+
+		case R.id.logout:
+			if(item.getItemId() == R.id.logout)
+			{
+				Session session = Session.getActiveSession();
+				if (!session.isClosed()) {
+					session.closeAndClearTokenInformation();
+				}
+			}
+			finish();
+			break;
+		}
+
+		return super.onMenuItemSelected(featureId, item);
+	}
+
     
 }

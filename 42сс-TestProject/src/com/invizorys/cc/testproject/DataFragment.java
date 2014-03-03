@@ -61,7 +61,7 @@ public class DataFragment extends SherlockFragment{
 		
 		return rootView;		
 	}
-	
+
 	private void readDataFromBd() {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 
