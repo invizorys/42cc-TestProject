@@ -14,7 +14,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	
 	private ActionBar.Tab dataTab,photoTab;
 	private SherlockFragment dataFragment = new DataFragment();
-	private SherlockFragment photofragment = new PhotoFragment();
+	private SherlockFragment photofragment = new AboutFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

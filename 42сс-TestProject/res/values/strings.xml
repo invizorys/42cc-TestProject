@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="app_id">591632274264513</string> 
     <string name="logout">Logout</string>
+    <string name="about">42 coffee-cups test project \n\n developed by: Paryshkura Roman</string>
 
 </resources>
