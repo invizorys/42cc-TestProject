@@ -71,7 +71,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	{
 		db = this.getWritableDatabase();
 		cv = new ContentValues();
-		Log.d(LOG_TAG, "--- Insert in dataTable: ---");
+		Log.d(LOG_TAG, "--- Update row in dataTable: ---");
 
 		cv.put("id", user.getId());
 		cv.put("name", user.getName());

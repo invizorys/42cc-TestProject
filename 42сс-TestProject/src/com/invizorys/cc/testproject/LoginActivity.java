@@ -1,6 +1,10 @@
 package com.invizorys.cc.testproject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -162,7 +166,16 @@ public class LoginActivity extends Activity {
 		cv.put("id", user.getId());
 		cv.put("name", user.getFirstName());
 		cv.put("surname", user.getLastName());
-		cv.put("birthday", user.getBirthday().replace("/", "."));
+		
+		SimpleDateFormat USFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+		SimpleDateFormat UKFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.UK);
+	    Date date = null;
+		try {
+			date = USFormat.parse(user.getBirthday());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		cv.put("birthday", UKFormat.format(date));
 		
 		long rowID = db.insert("dataTable", null, cv);
 		Log.d(LOG_TAG, "user: id - " + user.getId() + ", name - " + user.getFirstName() 
