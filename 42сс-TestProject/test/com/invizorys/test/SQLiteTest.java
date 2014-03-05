@@ -14,10 +14,9 @@ import org.robolectric.util.SQLiteMap;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.invizorys.cc.testproject.util.DBHelper;
+import com.invizorys.cc.testproject.db.DBHelper;
 
 @UsingDatabaseMap(SQLiteMap.class)
 @RunWith(RobolectricTestRunner.class)

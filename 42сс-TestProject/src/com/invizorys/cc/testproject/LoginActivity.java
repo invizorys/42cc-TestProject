@@ -24,7 +24,7 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 import com.invizorys.cc.testproject.R;
-import com.invizorys.cc.testproject.util.DBHelper;
+import com.invizorys.cc.testproject.db.DBHelper;
 
 public class LoginActivity extends Activity {
 	private UiLifecycleHelper uiHelper;
@@ -162,7 +162,7 @@ public class LoginActivity extends Activity {
 		cv.put("id", user.getId());
 		cv.put("name", user.getFirstName());
 		cv.put("surname", user.getLastName());
-		cv.put("birthday", user.getBirthday());
+		cv.put("birthday", user.getBirthday().replace("/", "."));
 		
 		long rowID = db.insert("dataTable", null, cv);
 		Log.d(LOG_TAG, "user: id - " + user.getId() + ", name - " + user.getFirstName() 

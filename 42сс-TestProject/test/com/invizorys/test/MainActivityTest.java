@@ -2,6 +2,7 @@ package com.invizorys.test;
 
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +15,14 @@ import android.widget.TextView;
 
 import com.invizorys.cc.testproject.MainActivity;
 import com.invizorys.cc.testproject.R;
+import com.invizorys.cc.testproject.db.DBHelper;
+import com.invizorys.cc.testproject.db.User;
 
 @RunWith(RobolectricTestRunner.class) @Config(reportSdk = 10)
 public class MainActivityTest {
 	private MainActivity activity;
 	private TextView name, surname, dateOfBirth;
+	private User user;
 
 	@Before
     public void setUp() {
@@ -41,5 +45,15 @@ public class MainActivityTest {
 		assertNotSame("", name.getText().toString());
 		assertNotNull("", surname.getText().toString());
 		assertNotNull("", dateOfBirth.getText().toString());
+	}
+	
+	@Test
+	public void isDataFromDB()
+	{
+		DBHelper dbHelper = new DBHelper(activity);
+		user = dbHelper.readUserData();
+		assertEquals(user.getName(), name.getText().toString());
+		assertEquals(user.getSurname(), surname.getText().toString());
+		assertEquals(user.getBirthday(), dateOfBirth.getText().toString());
 	}
 }

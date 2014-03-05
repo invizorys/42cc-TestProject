@@ -6,11 +6,13 @@
     android:orientation="vertical" >
 
     <EditText
+        android:id="@+id/editText_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/name" />
 
     <EditText
+        android:id="@+id/editText_surname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/surname" />

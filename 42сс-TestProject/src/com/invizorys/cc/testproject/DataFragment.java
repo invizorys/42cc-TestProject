@@ -15,8 +15,6 @@ import java.util.Locale;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -30,21 +28,25 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.invizorys.cc.testproject.util.DBHelper;
+import com.invizorys.cc.testproject.db.DBHelper;
+import com.invizorys.cc.testproject.db.User;
 import com.invizorys.cc.testproject.R;
 
 public class DataFragment extends SherlockFragment{
 	private TextView name, surname, birthday;
 	private Button buttonEditBirthday;
 	private ImageView userPhoto;
+	private EditText editName, editSurname;
 	private DBHelper dbHelper;
-	private long userId;
 	private String photoPath;
 	private File photoFile;
+	private User user;
 	
 	final String LOG_TAG = "myLogs";
 	
@@ -68,12 +70,13 @@ public class DataFragment extends SherlockFragment{
 		});
 		
 		dbHelper = new DBHelper(getActivity());
-		readDataFromBd();
+		user = dbHelper.readUserData();
+		fillTextViews();
 		
 		photoPath = Environment.getExternalStorageDirectory() + "/Android/data/" + getActivity().getPackageName();
 		photoFile = new File(photoPath + "/photo.jpg");
 		if (!photoFile.exists()) {
-			new DownloadPhoto().execute(userId);
+			new DownloadPhoto().execute(user.getId());
 		} else {
 			userPhoto.setImageBitmap(BitmapFactory.decodeFile(photoPath + "/photo.jpg"));
 		}
@@ -85,11 +88,21 @@ public class DataFragment extends SherlockFragment{
 		final Dialog dialog = new Dialog(getActivity());
 		dialog.setContentView(R.layout.edit_data_dialog);
 		dialog.setTitle("Edit data");
+		
+		editName = (EditText) dialog.findViewById(R.id.editText_name);
+		editSurname = (EditText) dialog.findViewById(R.id.editText_surname);
+		editName.setText(user.getName());
+		editSurname.setText(user.getSurname());
 
 		dialog.findViewById(R.id.button_ok).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//dialog.dismiss();
+				if(isDataCorrect())
+				{
+					saveUserData();
+					fillTextViews();
+					dialog.dismiss();
+				}
 			}
 		});
 		
@@ -101,6 +114,7 @@ public class DataFragment extends SherlockFragment{
 		});
 		
 		buttonEditBirthday = (Button) dialog.findViewById(R.id.button_edit_birthday);
+		buttonEditBirthday.setText(user.getBirthday());
 		buttonEditBirthday.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -171,29 +185,33 @@ public class DataFragment extends SherlockFragment{
 				});
 		dialog.show();
 	}
-
-	private void readDataFromBd() {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-		Log.d(LOG_TAG, "--- Read data from DB: ---");
-
-		Cursor c = db.query("dataTable", null, null, null, null, null, null);
-
-		if (c.moveToFirst()) {
-
-			int userIdColIndex = c.getColumnIndex("id");
-			int nameColIndex = c.getColumnIndex("name");
-			int surnameColIndex = c.getColumnIndex("surname");
-			int birthdayColIndex = c.getColumnIndex("birthday");
-
-			userId = Long.valueOf(c.getString(userIdColIndex)).longValue();
-			name.setText("Name: " + c.getString(nameColIndex));
-			surname.setText("Surname: " + c.getString(surnameColIndex));
-			birthday.setText("date of birth: " + c.getString(birthdayColIndex));
-
-		} else
-			Log.d(LOG_TAG, "0 rows");
-		c.close();
+	
+	private boolean isDataCorrect()
+	{
+		if (editName.getText().toString().equals("")) {
+			Toast.makeText(getActivity(), "name is not valid", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		if (editSurname.getText().toString().equals("")) {
+			Toast.makeText(getActivity(), "surname is not valid", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		return true;
+	}
+	
+	private void saveUserData() {
+		user.setName(editName.getText().toString().trim());
+		user.setSurname(editSurname.getText().toString().trim());
+		user.setBirthday(buttonEditBirthday.getText().toString());
+		
+		dbHelper.updateData(user);
+	}
+	
+	private void fillTextViews()
+	{
+		name.setText(user.getName());
+		surname.setText(user.getSurname());
+		birthday.setText(user.getBirthday());
 	}
 	
 	private void savePhotoOnSdcard(Bitmap bitmap) throws IOException
