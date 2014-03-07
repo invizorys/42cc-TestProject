@@ -1,4 +1,4 @@
-package com.invizorys.cc.testproject;
+package com.invizorys.cc.testproject.fragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,7 +35,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.invizorys.cc.testproject.db.DBHelper;
-import com.invizorys.cc.testproject.db.User;
+import com.invizorys.cc.testproject.entity.User;
 import com.invizorys.cc.testproject.R;
 
 public class DataFragment extends SherlockFragment{
@@ -232,8 +232,7 @@ public class DataFragment extends SherlockFragment{
 
 		@Override
 		protected Bitmap doInBackground(Long... params) {
-				String url = String.format(
-						"https://graph.facebook.com/%s/picture", params[0]);
+				String url = String.format("https://graph.facebook.com/%s/picture", params[0]);
 				
 				InputStream inputStream;
 				try {

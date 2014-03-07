@@ -8,12 +8,18 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.Session;
+
 import com.invizorys.cc.testproject.R;
+import com.invizorys.cc.testproject.util.TabListener;
+import com.invizorys.cc.testproject.fragment.DataFragment;
+import com.invizorys.cc.testproject.fragment.FriendsFragment;
+import com.invizorys.cc.testproject.fragment.AboutFragment;
 
 public class MainActivity extends SherlockFragmentActivity {
 	
-	private ActionBar.Tab dataTab,photoTab;
+	private ActionBar.Tab dataTab, friendsTab, aboutTab;
 	private SherlockFragment dataFragment = new DataFragment();
+	private SherlockFragment friendsFragment = new FriendsFragment();
 	private SherlockFragment photofragment = new AboutFragment();
 
     @Override
@@ -24,14 +30,17 @@ public class MainActivity extends SherlockFragmentActivity {
         ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		dataTab = actionBar.newTab().setText("FACEBOOK");
-		photoTab = actionBar.newTab().setText("ABOUT");
+		dataTab = actionBar.newTab().setText("Main");
+		friendsTab = actionBar.newTab().setText("Friends");
+		aboutTab = actionBar.newTab().setText("About");
 
 		dataTab.setTabListener(new TabListener(dataFragment));
-		photoTab.setTabListener(new TabListener(photofragment));
+		friendsTab.setTabListener(new TabListener(friendsFragment));
+		aboutTab.setTabListener(new TabListener(photofragment));
 
 		actionBar.addTab(dataTab);
-		actionBar.addTab(photoTab);
+		actionBar.addTab(friendsTab);
+		actionBar.addTab(aboutTab);
     }
     
     @Override

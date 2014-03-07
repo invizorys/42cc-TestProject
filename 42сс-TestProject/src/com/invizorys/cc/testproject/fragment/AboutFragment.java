@@ -1,4 +1,4 @@
-package com.invizorys.cc.testproject;
+package com.invizorys.cc.testproject.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
+
+import com.invizorys.cc.testproject.R;
 
 
 public class AboutFragment extends SherlockFragment{

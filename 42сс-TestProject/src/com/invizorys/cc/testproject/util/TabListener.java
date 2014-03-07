@@ -1,4 +1,4 @@
-package com.invizorys.cc.testproject;
+package com.invizorys.cc.testproject.util;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;

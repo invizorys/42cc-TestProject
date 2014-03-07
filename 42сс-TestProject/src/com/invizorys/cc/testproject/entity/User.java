@@ -1,4 +1,4 @@
-package com.invizorys.cc.testproject.db;
+package com.invizorys.cc.testproject.entity;
 
 public class User {
 	private long id;

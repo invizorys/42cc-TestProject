@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.invizorys.cc.testproject.MainActivity;
 import com.invizorys.cc.testproject.R;
 import com.invizorys.cc.testproject.db.DBHelper;
-import com.invizorys.cc.testproject.db.User;
+import com.invizorys.cc.testproject.entity.User;
 
 @RunWith(RobolectricTestRunner.class) @Config(reportSdk = 10)
 public class MainActivityTest {

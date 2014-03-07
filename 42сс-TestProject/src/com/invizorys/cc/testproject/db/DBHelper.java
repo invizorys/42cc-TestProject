@@ -1,5 +1,7 @@
 package com.invizorys.cc.testproject.db;
 
+import com.invizorys.cc.testproject.entity.User;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
