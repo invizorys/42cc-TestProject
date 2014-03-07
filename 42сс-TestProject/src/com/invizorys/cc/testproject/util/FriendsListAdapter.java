@@ -1,18 +1,14 @@
 package com.invizorys.cc.testproject.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.File;
 import java.util.List;
 
 import com.invizorys.cc.testproject.R;
 import com.invizorys.cc.testproject.entity.Friend;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,37 +67,15 @@ public class FriendsListAdapter extends ArrayAdapter<Friend>
 		Friend friend = getItem(position);
 
 		friendNameAndSurname.setText(friend.getName());
-		new DownloadPhoto().execute(friend.getId());
+		
+		String photoPath = Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName();
+		String photoFileStr = photoPath + "/" + friend.getId() + ".jpg";
+		File photoFile = new File(photoFileStr);
+		if (photoFile.exists()) {
+			friendPhoto.setImageBitmap(BitmapFactory.decodeFile(photoFileStr));
+		}
 
 		return convertView;
-	}
-	
-	private class DownloadPhoto extends AsyncTask<String, Void, Bitmap> {
-
-		@Override
-		protected Bitmap doInBackground(String... params) {
-				String url = String.format("https://graph.facebook.com/%s/picture", params[0]);
-				
-				InputStream inputStream;
-				try {
-					inputStream = new URL(url).openStream();
-					Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-					return bitmap;
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				return null;
-		}
-
-		@Override
-		protected void onPostExecute(Bitmap photo) {
-			super.onPostExecute(photo);
-			if(photo != null)
-				friendPhoto.setImageBitmap(photo);
-		}
-
 	}
 
 }

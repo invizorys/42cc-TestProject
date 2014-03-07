@@ -1,8 +1,6 @@
 package com.invizorys.cc.testproject.fragment;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -21,7 +19,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +33,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.invizorys.cc.testproject.db.DBHelper;
 import com.invizorys.cc.testproject.entity.User;
+import com.invizorys.cc.testproject.util.Util;
 import com.invizorys.cc.testproject.R;
 
 public class DataFragment extends SherlockFragment{
@@ -214,20 +212,6 @@ public class DataFragment extends SherlockFragment{
 		birthday.setText(user.getBirthday());
 	}
 	
-	private void savePhotoOnSdcard(Bitmap bitmap) throws IOException
-	{
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bytes);
-
-		new File(photoPath).mkdirs();
-		photoFile.createNewFile();
-		FileOutputStream fo = new FileOutputStream(photoFile);
-		fo.write(bytes.toByteArray());
-		Log.d(LOG_TAG, "photo saved on sdcard");
-
-		fo.close();
-	}
-	
 	private class DownloadPhoto extends AsyncTask<Long, Void, Bitmap> {
 
 		@Override
@@ -238,7 +222,7 @@ public class DataFragment extends SherlockFragment{
 				try {
 					inputStream = new URL(url).openStream();
 					Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-					savePhotoOnSdcard(bitmap);
+					Util.savePhotoOnSdcard(bitmap, "photo", getActivity());
 					return bitmap;
 				} catch (MalformedURLException e) {
 					e.printStackTrace();

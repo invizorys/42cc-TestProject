@@ -19,8 +19,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +27,7 @@ import android.widget.Toast;
 
 import com.invizorys.cc.testproject.R;
 import com.invizorys.cc.testproject.db.DBHelper;
+import com.invizorys.cc.testproject.util.Util;
 
 public class LoginActivity extends Activity {
 	private UiLifecycleHelper uiHelper;
@@ -59,7 +58,7 @@ public class LoginActivity extends Activity {
 				new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(isNetworkConnected())
+						if(Util.isNetworkConnected(context))
 						{
 							dialog = ProgressDialog.show(context, "", "Loading. Please wait...", true);
 							login();
@@ -101,7 +100,7 @@ public class LoginActivity extends Activity {
 			Exception exception) {
 		if (session != null && session.isOpened()) {
 			Log.i(LOG_TAG, "session is open");
-			if(isNetworkConnected())
+			if(Util.isNetworkConnected(context))
 				getUser();
 		} else {
 			Log.i(LOG_TAG, "session is closed");
@@ -182,10 +181,4 @@ public class LoginActivity extends Activity {
 				+ ", surname - " + user.getLastName() + ", birthday - " + user.getBirthday() + ", - saved on DB");
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
-	
-	private boolean isNetworkConnected() {
-		  ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		  NetworkInfo ni = cm.getActiveNetworkInfo();
-		  return ni != null && ni.isConnected();
-		 }
 }
