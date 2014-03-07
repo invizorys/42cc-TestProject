@@ -11,6 +11,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.invizorys.cc.testproject.MainActivity;
@@ -22,6 +23,7 @@ import com.invizorys.cc.testproject.entity.User;
 public class MainActivityTest {
 	private MainActivity activity;
 	private TextView name, surname, dateOfBirth;
+	private ListView lvFriends;
 	private User user;
 
 	@Before
@@ -31,6 +33,7 @@ public class MainActivityTest {
 		name = (TextView) activity.findViewById(R.id.textView_name);
 		surname = (TextView) activity.findViewById(R.id.textView_surname);
 		dateOfBirth = (TextView) activity.findViewById(R.id.textView_birthday);
+		lvFriends = (ListView) activity.findViewById(R.id.listView_friends);
 	}
 	
 	@Test
@@ -43,8 +46,15 @@ public class MainActivityTest {
 	@Test
 	public void testFieldsNotEmpty() {
 		assertNotSame("", name.getText().toString());
-		assertNotNull("", surname.getText().toString());
-		assertNotNull("", dateOfBirth.getText().toString());
+		assertNotSame("", surname.getText().toString());
+		assertNotSame("", dateOfBirth.getText().toString());
+	}
+	
+	@Test
+	public void testListView()
+	{
+		assertNotNull(lvFriends);
+		assertNotSame(0, lvFriends.getCount());
 	}
 	
 	@Test
