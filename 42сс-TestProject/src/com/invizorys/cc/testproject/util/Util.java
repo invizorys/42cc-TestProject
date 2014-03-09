@@ -57,5 +57,20 @@ public class Util {
 	    }
 	    return checkedIds;
 	}
+	
+	public static boolean saveArray(Context context, ArrayList<String> checkedIds)
+	{
+	    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+	    SharedPreferences.Editor mEdit = sp.edit();
+	    mEdit.putInt("list_size", checkedIds.size());
+	    mEdit.clear();
+	    
+	    for(int i = 0; i < checkedIds.size(); i++)  
+	    {
+	        mEdit.putString("Status_" + i, checkedIds.get(i));  
+	    }
+
+	    return mEdit.commit();     
+	}
 
 }

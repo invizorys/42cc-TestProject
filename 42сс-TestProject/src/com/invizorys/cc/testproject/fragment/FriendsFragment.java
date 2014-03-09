@@ -12,7 +12,6 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -21,7 +20,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -138,21 +136,6 @@ public class FriendsFragment extends SherlockFragment {
 		startActivity(intent);
 	}
 	
-	public boolean saveArray(ArrayList<String> checkedId)
-	{
-	    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-	    SharedPreferences.Editor mEdit = sp.edit();
-	    mEdit.putInt("list_size", checkedId.size());
-	    mEdit.clear();
-	    
-	    for(int i = 0; i < checkedId.size(); i++)  
-	    {
-	        mEdit.putString("Status_" + i, checkedId.get(i));  
-	    }
-
-	    return mEdit.commit();     
-	}
-	
 	private void updateFriendList()
 	{
 		CheckBox cb;
@@ -163,7 +146,7 @@ public class FriendsFragment extends SherlockFragment {
 	        	checkedIds.add(adapter.getItem(position).getId());
 	        }
 	    }
-	    saveArray(checkedIds);
+	    Util.saveArray(getActivity(), checkedIds);
 	    
 		setPriorityForFriends(checkedIds);
 		Collections.sort(friends, new FriendPriorityComparator());
