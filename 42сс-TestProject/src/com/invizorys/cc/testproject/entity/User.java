@@ -6,6 +6,16 @@ public class User {
 	private String surname;
 	private String birthday;
 	
+	public User() { }
+	
+	public User(long id, String name, String surname, String birthday)
+	{
+		this.id = id;
+		this.name = name;
+		this.surname = surname;
+		this.birthday = birthday;
+	}
+	
 	public long getId() {
 		return id;
 	}

@@ -15,10 +15,8 @@ import com.facebook.model.GraphUser;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,13 +25,12 @@ import android.widget.Toast;
 
 import com.invizorys.cc.testproject.R;
 import com.invizorys.cc.testproject.db.DBHelper;
+import com.invizorys.cc.testproject.entity.User;
 import com.invizorys.cc.testproject.util.Util;
 
 public class LoginActivity extends Activity {
 	private UiLifecycleHelper uiHelper;
 	private GraphUser user;
-	private ContentValues cv;
-	private SQLiteDatabase db;
 	private DBHelper dbHelper;
 	private Context context = this;
 	private ProgressDialog dialog;
@@ -146,7 +143,9 @@ public class LoginActivity extends Activity {
 							Response response) {
 						if (currentUser != null) {
 							user = currentUser;
-							saveUserData();
+							long userId = Long.valueOf(user.getId()).longValue();
+							String birthday = changeDataFormat(user.getBirthday());
+							dbHelper.saveUserData(new User(userId, user.getFirstName(), user.getLastName(), birthday)); 
 							dialog.dismiss();
 							startMainActivity();
 						} else {
@@ -157,15 +156,9 @@ public class LoginActivity extends Activity {
 				});
 		Request.executeBatchAsync(request);
 	}
-
-	private void saveUserData() {
-		db = dbHelper.getWritableDatabase();
-
-		cv = new ContentValues();
-		cv.put("id", user.getId());
-		cv.put("name", user.getFirstName());
-		cv.put("surname", user.getLastName());
-		
+	
+	private String changeDataFormat(String birthday)
+	{
 		SimpleDateFormat USFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 		SimpleDateFormat UKFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.UK);
 	    Date date = null;
@@ -174,11 +167,6 @@ public class LoginActivity extends Activity {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		cv.put("birthday", UKFormat.format(date));
-		
-		long rowID = db.insert("dataTable", null, cv);
-		Log.d(LOG_TAG, "user: id - " + user.getId() + ", name - " + user.getFirstName() 
-				+ ", surname - " + user.getLastName() + ", birthday - " + user.getBirthday() + ", - saved on DB");
-		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
+		return UKFormat.format(date);		
 	}
 }

@@ -75,14 +75,34 @@ public class DBHelper extends SQLiteOpenHelper {
 		cv = new ContentValues();
 		Log.d(LOG_TAG, "--- Update row in dataTable: ---");
 
-		cv.put("id", user.getId());
-		cv.put("name", user.getName());
-		cv.put("surname", user.getSurname());
-		cv.put("birthday", user.getBirthday());
+		cv = contentValuesFilling(user);
 
 		long rowID = db.update(DATA_TABLE_NAME, cv, "id = ?", new String[] { String.valueOf(user.getId()) });
 		Log.d(LOG_TAG, "row updated, ID = " + rowID);
 		db.close();
+	}
+	
+	public void saveUserData(User user)
+	{
+		db = this.getWritableDatabase();
+		cv = contentValuesFilling(user);
+		Log.d(LOG_TAG, "--- Update row in dataTable: ---");
+
+		long rowID = db.insert("dataTable", null, cv);
+		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
+		Log.d(LOG_TAG, "user: id - " + user.getId() + ", name - " + user.getName() 
+				+ ", surname - " + user.getSurname() + ", birthday - " + user.getBirthday() + ", - saved on DB");
+		db.close();
+	}
+	
+	private ContentValues contentValuesFilling(User user)
+	{
+		cv = new ContentValues();
+		cv.put("id", user.getId());
+		cv.put("name", user.getName());
+		cv.put("surname", user.getSurname());
+		cv.put("birthday", user.getBirthday());
+		return cv;
 	}
 
 	public static SQLiteDatabase getDb() {
