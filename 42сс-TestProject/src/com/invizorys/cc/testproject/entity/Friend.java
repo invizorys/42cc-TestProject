@@ -3,8 +3,13 @@ package com.invizorys.cc.testproject.entity;
 public class Friend {
 	private String id;
 	private String name;
+	private int priority;
 
 	public Friend() {
+	}
+	
+	public Friend(String id) {
+		this.id = id;
 	}
 
 	public Friend(String id, String name) {
@@ -28,4 +33,11 @@ public class Friend {
 		this.name = name;
 	}
 
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
 }

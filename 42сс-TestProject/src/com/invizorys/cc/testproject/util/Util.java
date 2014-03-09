@@ -4,12 +4,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class Util {
@@ -40,6 +43,19 @@ public class Util {
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo ni = cm.getActiveNetworkInfo();
 		return ni != null && ni.isConnected();
+	}
+	
+	public static ArrayList<String> loadCheckedIds(Context context)
+	{
+	    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+	    int size = sp.getInt("list_size", 0);  
+
+	    ArrayList<String> checkedIds = new ArrayList<String>();
+		for(int i=0; i < size; i++) 
+	    {
+	    	checkedIds.add(sp.getString("Status_" + i, null));
+	    }
+	    return checkedIds;
 	}
 
 }

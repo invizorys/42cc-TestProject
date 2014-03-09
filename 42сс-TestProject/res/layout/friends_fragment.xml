@@ -10,6 +10,14 @@
     <ListView
         android:id="@+id/listView_friends"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_update_friend_list" />
+
+    <Button
+        android:id="@+id/button_update_friend_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/update" />
 
 </RelativeLayout>

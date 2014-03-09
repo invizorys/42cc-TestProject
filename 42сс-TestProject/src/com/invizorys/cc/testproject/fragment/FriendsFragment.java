@@ -6,10 +6,13 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -18,10 +21,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -43,6 +49,7 @@ public class FriendsFragment extends SherlockFragment {
 	private FriendsListAdapter adapter;
 	private ProgressDialog dialog;
 	private File imagesDir;
+	private ArrayList<String> checkedIds = new ArrayList<String>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +70,14 @@ public class FriendsFragment extends SherlockFragment {
 					Toast.makeText(getActivity(), "check your internet connection", Toast.LENGTH_SHORT).show();
 			}
 
+		});
+		
+		rootView.findViewById(R.id.button_update_friend_list).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				updateFriendList();
+			}
 		});
 
 		String photoPath = Environment.getExternalStorageDirectory() + "/Android/data/" + getActivity().getPackageName();
@@ -95,6 +110,10 @@ public class FriendsFragment extends SherlockFragment {
 								}
 								else
 								{
+									checkedIds = Util.loadCheckedIds(getActivity());
+									setPriorityForFriends(checkedIds);
+									Collections.sort(friends, new FriendPriorityComparator());
+									
 									dialog.dismiss();
 									adapter.notifyDataSetChanged();
 								}
@@ -117,6 +136,49 @@ public class FriendsFragment extends SherlockFragment {
 			intent.setData(Uri.parse(urlBrowser));
 		}
 		startActivity(intent);
+	}
+	
+	public boolean saveArray(ArrayList<String> checkedId)
+	{
+	    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+	    SharedPreferences.Editor mEdit = sp.edit();
+	    mEdit.putInt("list_size", checkedId.size());
+	    mEdit.clear();
+	    
+	    for(int i = 0; i < checkedId.size(); i++)  
+	    {
+	        mEdit.putString("Status_" + i, checkedId.get(i));  
+	    }
+
+	    return mEdit.commit();     
+	}
+	
+	private void updateFriendList()
+	{
+		CheckBox cb;
+		checkedIds = new ArrayList<String>();
+	    for (int position = 0; position < lvFriends.getChildCount(); position++){
+	        cb = (CheckBox) lvFriends.getChildAt(position).findViewById(R.id.checkBox_priority);
+	        if(cb.isChecked()){
+	        	checkedIds.add(adapter.getItem(position).getId());
+	        }
+	    }
+	    saveArray(checkedIds);
+	    
+		setPriorityForFriends(checkedIds);
+		Collections.sort(friends, new FriendPriorityComparator());
+		adapter = new FriendsListAdapter(getActivity(), friends);
+		lvFriends.setAdapter(adapter);
+	}
+	
+	private void setPriorityForFriends(ArrayList<String> checkedIds)
+	{
+		for (Friend friend : friends) {
+			if (checkedIds.contains(friend.getId()))
+				friend.setPriority(1);
+			else
+				friend.setPriority(0);		
+		}
 	}
 	
 	private class PhotoLoader extends AsyncTask<Friend, Void, Void> {
@@ -143,10 +205,21 @@ public class FriendsFragment extends SherlockFragment {
 		@Override
 		protected void onPostExecute(Void arg) {
 			super.onPostExecute(arg);
+			
+			checkedIds = Util.loadCheckedIds(getActivity());
+			setPriorityForFriends(checkedIds);
+			Collections.sort(friends, new FriendPriorityComparator());
 			adapter.notifyDataSetChanged();
 			dialog.dismiss();
 		}
 
+	}
+	
+	public class FriendPriorityComparator implements Comparator<Friend> {
+	    @Override
+	    public int compare(Friend friend1, Friend friend2) {
+	        return  friend2.getPriority() - friend1.getPriority();
+	    }
 	}
 
 }

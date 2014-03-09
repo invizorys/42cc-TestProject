@@ -13,5 +13,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="edit_data">Edit data</string>
+    <string name="update">Update</string>
 
 </resources>
