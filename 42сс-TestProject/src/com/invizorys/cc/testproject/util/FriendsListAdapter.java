@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -75,7 +76,7 @@ public class FriendsListAdapter extends ArrayAdapter<Friend>
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		
-		Friend friend = getItem(position);
+		final Friend friend = getItem(position);
 		
 		viewHolder.name.setText(friend.getName());
 
@@ -92,12 +93,19 @@ public class FriendsListAdapter extends ArrayAdapter<Friend>
 			viewHolder.checkBox.setChecked(false);
 		}
 
-//		viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//		   @Override
-//		   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//			   
-//		   }
-//		});
+		viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						final CheckBox box = viewHolder.checkBox;
+						if (box.isPressed()) {
+							if (friend.getPriority() == 1 && !isChecked)
+								checkedIds.remove(friend.getId());
+							else if (friend.getPriority() == 0 && isChecked)
+								checkedIds.add(friend.getId());
+						}
+						Util.saveArray(context, checkedIds);
+					}
+				});
 		
 		return convertView;
 	}

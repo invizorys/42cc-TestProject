@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -138,15 +137,7 @@ public class FriendsFragment extends SherlockFragment {
 	
 	private void updateFriendList()
 	{
-		CheckBox cb;
-		checkedIds = new ArrayList<String>();
-	    for (int position = 0; position < lvFriends.getChildCount(); position++){
-	        cb = (CheckBox) lvFriends.getChildAt(position).findViewById(R.id.checkBox_priority);
-	        if(cb.isChecked()){
-	        	checkedIds.add(adapter.getItem(position).getId());
-	        }
-	    }
-	    Util.saveArray(getActivity(), checkedIds);
+		checkedIds = Util.loadCheckedIds(getActivity());
 	    
 		setPriorityForFriends(checkedIds);
 		Collections.sort(friends, new FriendPriorityComparator());
