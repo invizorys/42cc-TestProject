@@ -5,15 +5,17 @@ public class User {
 	private String name;
 	private String surname;
 	private String birthday;
+	private String email;
 	
 	public User() { }
 	
-	public User(long id, String name, String surname, String birthday)
+	public User(long id, String name, String surname, String birthday, String email)
 	{
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.birthday = birthday;
+		this.email = email;
 	}
 	
 	public long getId() {
@@ -46,6 +48,14 @@ public class User {
 	
 	public void setBirthday(String birthday) {
 		this.birthday = birthday;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

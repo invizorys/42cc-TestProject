@@ -3,7 +3,7 @@ package com.invizorys.cc.testproject.entity;
 public class Friend {
 	private String id;
 	private String name;
-	private int priority;
+	private int priority; 
 
 	public Friend() {
 	}

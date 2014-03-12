@@ -18,10 +18,25 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
-    <CheckBox
-        android:id="@+id/checkBox_priority"
+    <Button
+        android:id="@+id/button_increase_priority"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/plus_icon"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/textView_priority"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/button_decrease_priority"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/minus_icon"
         android:focusable="false" />
 
 </LinearLayout>

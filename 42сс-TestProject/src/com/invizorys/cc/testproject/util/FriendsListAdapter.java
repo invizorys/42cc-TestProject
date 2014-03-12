@@ -1,7 +1,6 @@
 package com.invizorys.cc.testproject.util;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.invizorys.cc.testproject.R;
@@ -13,25 +12,22 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FriendsListAdapter extends ArrayAdapter<Friend>
 {
 	private List<Friend> mListFriends = null;
 	private Context context;
-	private ArrayList<String> checkedIds = new ArrayList<String>();
 
 	public FriendsListAdapter(Context context, List<Friend> friends)
 	{
 		super(context, R.layout.friends_list_item, friends);
 		this.mListFriends = friends;
 		this.context = context;
-		
-		checkedIds = Util.loadCheckedIds(context);
 	}
 
 	@Override
@@ -69,7 +65,6 @@ public class FriendsListAdapter extends ArrayAdapter<Friend>
 			viewHolder = new ViewHolder();
 			viewHolder.photo = (ImageView) convertView.findViewById(R.id.imageView_friend_photo);
 			viewHolder.name = (TextView) convertView.findViewById(R.id.textView_friend_name_and_surname);
-			viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkBox_priority);
 			convertView.setTag(viewHolder);
 		}
 		else{
@@ -87,23 +82,36 @@ public class FriendsListAdapter extends ArrayAdapter<Friend>
 			viewHolder.photo.setImageBitmap(BitmapFactory.decodeFile(photoFileStr));
 		}
 		
-		if(checkedIds.contains(friend.getId()))
-			viewHolder.checkBox.setChecked(true);
-		else {
-			viewHolder.checkBox.setChecked(false);
-		}
-
-		viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+		final TextView textViewPriority = (TextView) convertView.findViewById(R.id.textView_priority);
+		int friendPriority = Util.loadFriendPriority(context, friend.getId());
+		textViewPriority.setText(String.valueOf(friendPriority));
+		
+		convertView.findViewById(R.id.button_increase_priority).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				int priority = Integer.parseInt(textViewPriority.getText().toString());
+				if(priority < 5)
+				{
+					Util.saveFriendPriority(context, friend.getId(), priority+1);
+					textViewPriority.setText(String.valueOf(priority + 1));
+				}
+				if(priority == 5)
+					Toast.makeText(context, "it's a maximum priority", Toast.LENGTH_SHORT).show();
+				
+			}
+		});
+		
+		convertView.findViewById(R.id.button_decrease_priority).setOnClickListener(new OnClickListener() {
 					@Override
-					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						final CheckBox box = viewHolder.checkBox;
-						if (box.isPressed()) {
-							if (friend.getPriority() == 1 && !isChecked)
-								checkedIds.remove(friend.getId());
-							else if (friend.getPriority() == 0 && isChecked)
-								checkedIds.add(friend.getId());
+					public void onClick(View v) {
+						int priority = Integer.parseInt(textViewPriority.getText().toString());
+						if (priority > 0) {
+							Util.saveFriendPriority(context, friend.getId(), priority-1);
+							textViewPriority.setText(String.valueOf(priority - 1));
 						}
-						Util.saveArray(context, checkedIds);
+						if(priority == 0)
+							Toast.makeText(context, "it's a minimum priority", Toast.LENGTH_SHORT).show();
+
 					}
 				});
 		
@@ -113,7 +121,6 @@ public class FriendsListAdapter extends ArrayAdapter<Friend>
 	private static class ViewHolder {
 		ImageView photo;
 		TextView name;
-		CheckBox checkBox;
 	}
 
 }

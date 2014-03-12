@@ -77,6 +77,7 @@ public class LoginActivity extends Activity {
 		if (!session.isOpened() && !session.isClosed()) {
 			ArrayList<String> permissions = new ArrayList<String>();
 			permissions.add("user_birthday");
+			permissions.add("email");
 
 			session.openForRead(new Session.OpenRequest(this).setCallback(
 					callback).setPermissions(permissions));
@@ -145,7 +146,7 @@ public class LoginActivity extends Activity {
 							user = currentUser;
 							long userId = Long.valueOf(user.getId()).longValue();
 							String birthday = changeDataFormat(user.getBirthday());
-							dbHelper.saveUserData(new User(userId, user.getFirstName(), user.getLastName(), birthday)); 
+							dbHelper.saveUserData(new User(userId, user.getFirstName(), user.getLastName(), birthday, (String) user.asMap().get("email"))); 
 							dialog.dismiss();
 							startMainActivity();
 						} else {

@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,32 +44,18 @@ public class Util {
 		return ni != null && ni.isConnected();
 	}
 	
-	public static ArrayList<String> loadCheckedIds(Context context)
+	public static boolean saveFriendPriority(Context context, String friendId, int priority)
 	{
-	    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-	    int size = sp.getInt("list_size", 0);  
-
-	    ArrayList<String> checkedIds = new ArrayList<String>();
-		for(int i=0; i < size; i++) 
-	    {
-	    	checkedIds.add(sp.getString("Status_" + i, null));
-	    }
-	    return checkedIds;
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putInt(friendId, priority);
+		return editor.commit();
 	}
 	
-	public static boolean saveArray(Context context, ArrayList<String> checkedIds)
+	public static int loadFriendPriority(Context context, String friendId)
 	{
-	    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-	    SharedPreferences.Editor mEdit = sp.edit();
-	    mEdit.putInt("list_size", checkedIds.size());
-	    mEdit.clear();
-	    
-	    for(int i = 0; i < checkedIds.size(); i++)  
-	    {
-	        mEdit.putString("Status_" + i, checkedIds.get(i));  
-	    }
-
-	    return mEdit.commit();     
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context); 
+	    return sp.getInt(friendId, 0);
 	}
 
 }

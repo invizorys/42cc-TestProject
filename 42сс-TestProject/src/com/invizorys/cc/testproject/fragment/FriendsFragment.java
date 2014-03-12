@@ -46,7 +46,6 @@ public class FriendsFragment extends SherlockFragment {
 	private FriendsListAdapter adapter;
 	private ProgressDialog dialog;
 	private File imagesDir;
-	private ArrayList<String> checkedIds = new ArrayList<String>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,8 +106,7 @@ public class FriendsFragment extends SherlockFragment {
 								}
 								else
 								{
-									checkedIds = Util.loadCheckedIds(getActivity());
-									setPriorityForFriends(checkedIds);
+									setPriorityForFriends();
 									Collections.sort(friends, new FriendPriorityComparator());
 									
 									dialog.dismiss();
@@ -129,7 +127,7 @@ public class FriendsFragment extends SherlockFragment {
 		final PackageManager packageManager = getActivity().getPackageManager();
 		List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 		if (list.size() == 0) {
-			final String urlBrowser = "https://www.facebook.com/pages/" + friendId;
+			final String urlBrowser = "https://www.facebook.com/" + friendId;
 			intent.setData(Uri.parse(urlBrowser));
 		}
 		startActivity(intent);
@@ -137,21 +135,16 @@ public class FriendsFragment extends SherlockFragment {
 	
 	private void updateFriendList()
 	{
-		checkedIds = Util.loadCheckedIds(getActivity());
-	    
-		setPriorityForFriends(checkedIds);
+		setPriorityForFriends();
 		Collections.sort(friends, new FriendPriorityComparator());
 		adapter = new FriendsListAdapter(getActivity(), friends);
 		lvFriends.setAdapter(adapter);
 	}
 	
-	private void setPriorityForFriends(ArrayList<String> checkedIds)
+	private void setPriorityForFriends()
 	{
 		for (Friend friend : friends) {
-			if (checkedIds.contains(friend.getId()))
-				friend.setPriority(1);
-			else
-				friend.setPriority(0);		
+			friend.setPriority(Util.loadFriendPriority(getActivity(), friend.getId()));
 		}
 	}
 	
@@ -180,8 +173,7 @@ public class FriendsFragment extends SherlockFragment {
 		protected void onPostExecute(Void arg) {
 			super.onPostExecute(arg);
 			
-			checkedIds = Util.loadCheckedIds(getActivity());
-			setPriorityForFriends(checkedIds);
+			setPriorityForFriends();
 			Collections.sort(friends, new FriendPriorityComparator());
 			adapter.notifyDataSetChanged();
 			dialog.dismiss();

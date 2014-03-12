@@ -9,6 +9,7 @@
     <string name="about">42 coffee-cups test project \n\n developed by: Paryshkura Roman</string>
     <string name="name">Name: </string>
     <string name="surname">Surname: </string>
+    <string name="email">Email: </string>
     <string name="birthday">Birthday: </string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>

@@ -37,10 +37,10 @@ import com.invizorys.cc.testproject.util.Util;
 import com.invizorys.cc.testproject.R;
 
 public class DataFragment extends SherlockFragment{
-	private TextView name, surname, birthday;
+	private TextView name, surname, birthday, email;
 	private Button buttonEditBirthday;
 	private ImageView userPhoto;
-	private EditText editName, editSurname;
+	private EditText editName, editSurname, editEmail;
 	private DBHelper dbHelper;
 	private String photoPath;
 	private File photoFile;
@@ -59,6 +59,7 @@ public class DataFragment extends SherlockFragment{
 		surname = (TextView) rootView.findViewById(R.id.textView_surname);
 		birthday = (TextView) rootView.findViewById(R.id.textView_birthday);
 		userPhoto = (ImageView) rootView.findViewById(R.id.imageView_user_photo);
+		email = (TextView) rootView.findViewById(R.id.textView_email);
 		
 		rootView.findViewById(R.id.button_edit_data).setOnClickListener(new OnClickListener() {
 			@Override
@@ -89,8 +90,10 @@ public class DataFragment extends SherlockFragment{
 		
 		editName = (EditText) dialog.findViewById(R.id.editText_name);
 		editSurname = (EditText) dialog.findViewById(R.id.editText_surname);
+		editEmail = (EditText) dialog.findViewById(R.id.editText_email);
 		editName.setText(user.getName());
 		editSurname.setText(user.getSurname());
+		editEmail.setText(user.getEmail());
 
 		dialog.findViewById(R.id.button_ok).setOnClickListener(new OnClickListener() {
 			@Override
@@ -194,6 +197,11 @@ public class DataFragment extends SherlockFragment{
 			Toast.makeText(getActivity(), "surname is not valid", Toast.LENGTH_SHORT).show();
 			return false;
 		}
+		
+		if (!editEmail.getText().toString().matches("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")) {
+			Toast.makeText(getActivity(), "email is not valid", Toast.LENGTH_SHORT).show();
+			return false;	
+		}
 		return true;
 	}
 	
@@ -201,6 +209,7 @@ public class DataFragment extends SherlockFragment{
 		user.setName(editName.getText().toString().trim());
 		user.setSurname(editSurname.getText().toString().trim());
 		user.setBirthday(buttonEditBirthday.getText().toString());
+		user.setEmail(editEmail.getText().toString());
 		
 		dbHelper.updateData(user);
 	}
@@ -210,6 +219,7 @@ public class DataFragment extends SherlockFragment{
 		name.setText(user.getName());
 		surname.setText(user.getSurname());
 		birthday.setText(user.getBirthday());
+		email.setText(user.getEmail());
 	}
 	
 	private class DownloadPhoto extends AsyncTask<Long, Void, Bitmap> {
