@@ -2,7 +2,7 @@ package com.invizorys.cc.testproject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -75,12 +75,8 @@ public class LoginActivity extends Activity {
 	private void login() {
 		Session session = Session.getActiveSession();
 		if (!session.isOpened() && !session.isClosed()) {
-			ArrayList<String> permissions = new ArrayList<String>();
-			permissions.add("user_birthday");
-			permissions.add("email");
-
 			session.openForRead(new Session.OpenRequest(this).setCallback(
-					callback).setPermissions(permissions));
+					callback).setPermissions(Arrays.asList("email", "user_birthday")));
 		} else {
 			Session.openActiveSession(this, true, callback);
 		}

@@ -1,6 +1,9 @@
 package com.invizorys.cc.testproject;
 
+import java.io.File;
+
 import android.os.Bundle;
+import android.os.Environment;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -11,6 +14,7 @@ import com.facebook.Session;
 
 import com.invizorys.cc.testproject.R;
 import com.invizorys.cc.testproject.util.TabListener;
+import com.invizorys.cc.testproject.db.DBHelper;
 import com.invizorys.cc.testproject.fragment.DataFragment;
 import com.invizorys.cc.testproject.fragment.FriendsFragment;
 import com.invizorys.cc.testproject.fragment.AboutFragment;
@@ -21,6 +25,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	private SherlockFragment dataFragment = new DataFragment();
 	private SherlockFragment friendsFragment = new FriendsFragment();
 	private SherlockFragment photofragment = new AboutFragment();
+	private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +67,27 @@ public class MainActivity extends SherlockFragmentActivity {
 					session.closeAndClearTokenInformation();
 				}
 			}
+			
+			String filesPath = Environment.getExternalStorageDirectory() + "/Android/data/" + getPackageName();
+			File folder = new File(filesPath);
+			deleteRecursive(folder);
+
+			dbHelper = new DBHelper(this);
+			dbHelper.deleteUserData(String.valueOf(dbHelper.readUserData().getId()));
+			
 			finish();
 			break;
 		}
 
 		return super.onMenuItemSelected(featureId, item);
+	}
+    
+    private void deleteRecursive(File fileOrDirectory) {
+	    if (fileOrDirectory.isDirectory())
+	        for (File child : fileOrDirectory.listFiles())
+	            deleteRecursive(child);
+
+	    fileOrDirectory.delete();
 	}
 
     

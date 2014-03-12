@@ -50,7 +50,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		Cursor c = db.query(DATA_TABLE_NAME, null, null, null, null, null, null);
 
-		if (c.moveToFirst()) {
+		if (c.moveToLast()) {
 
 			int userIdColIndex = c.getColumnIndex("id");
 			int nameColIndex = c.getColumnIndex("name");
@@ -95,6 +95,12 @@ public class DBHelper extends SQLiteOpenHelper {
 		Log.d(LOG_TAG, "user: id - " + user.getId() + ", name - " + user.getName() 
 				+ ", surname - " + user.getSurname() + ", birthday - " + user.getBirthday() + ", - saved on DB");
 		db.close();
+	}
+	
+	public void deleteUserData(String id) {
+		Log.d(LOG_TAG, "--- Delete from dataTabe: ---");
+		int delCount = db.delete(DATA_TABLE_NAME, "id = " + id, null);
+		Log.d(LOG_TAG, "deleted rows count = " + delCount);
 	}
 	
 	private ContentValues contentValuesFilling(User user)
