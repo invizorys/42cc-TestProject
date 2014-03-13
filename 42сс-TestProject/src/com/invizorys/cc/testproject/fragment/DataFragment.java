@@ -218,7 +218,15 @@ public class DataFragment extends SherlockFragment{
 	{
 		name.setText(user.getName());
 		surname.setText(user.getSurname());
-		birthday.setText(user.getBirthday());
+		
+		if(user.getBirthday() == null)
+		{
+			birthday.setText("birthday is not available");
+			birthday.setTextColor(Color.RED);
+		}
+		else
+			birthday.setText(user.getBirthday());
+		
 		email.setText(user.getEmail());
 	}
 	

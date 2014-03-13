@@ -160,7 +160,8 @@ public class LoginActivity extends Activity {
 		SimpleDateFormat UKFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.UK);
 	    Date date = null;
 		try {
-			date = USFormat.parse(user.getBirthday());
+			if(user.getBirthday() != null)
+				date = USFormat.parse(user.getBirthday());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
